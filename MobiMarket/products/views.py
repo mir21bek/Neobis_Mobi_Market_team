@@ -1,8 +1,8 @@
 from rest_framework import viewsets
 from rest_framework import permissions
 
-from market_products.models import Product
-from market_products.serializers import ProductSerializer, LikeProductSerializer
+from .models import Product
+from .serializers import ProductSerializer, LikeProductSerializer
 
 
 class ProductApiView(viewsets.ModelViewSet):
