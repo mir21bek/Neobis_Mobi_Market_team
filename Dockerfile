@@ -8,7 +8,7 @@ WORKDIR /app
 COPY requirements.txt
 RUN pip install -r requirements.txt
 
-COPY MobiMarket .
+COPY . .
 COPY ../.env ./.env
 
 EXPOSE 8000
