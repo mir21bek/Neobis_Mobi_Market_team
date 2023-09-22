@@ -6,7 +6,7 @@ from .models import Product, LikeProduct
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('name', 'description', 'available', 'price')
+        fields = ('name', 'description', 'photo', 'available', 'price')
 
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)

@@ -10,6 +10,8 @@ django = "==4.2.5"
 djangorestframework = "==3.14.0"
 djangorestframework-simplejwt = "*"
 pillow = "*"
+cloudinary = "*"
+django-cloudinary-storage = "*"
 
 [dev-packages]
 
