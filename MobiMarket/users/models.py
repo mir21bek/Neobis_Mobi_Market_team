@@ -24,10 +24,12 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(max_length=255, unique=True, db_index=True)
     email = models.EmailField(max_length=255, unique=True, db_index=True)
+    avatar = models.ImageField(upload_to='MobiMarket/media/avatar_images', default='avatar_images/avatar.jpg')
     first_name = models.CharField(max_length=255, null=True)
     last_name = models.CharField(max_length=255, null=True)
     date_of_birth = models.DateField(default=now())
-    phone_number = models.CharField(max_length=10, null=True)
+    phone_number = models.CharField(max_length=15, null=True)
+    verification_code = models.CharField(max_length=6, null=True)
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)

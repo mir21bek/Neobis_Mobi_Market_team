@@ -2,10 +2,6 @@ from rest_framework import serializers
 from .models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
-from django.contrib.auth.tokens import PasswordResetTokenGenerator
-from django.contrib.auth.hashers import make_password
-from django.utils.encoding import force_str
-from django.utils.http import urlsafe_base64_decode
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -55,3 +51,41 @@ class LoginSerializer(serializers.ModelSerializer):
             'username': user.username,
             'tokens': user.tokens()
         }
+
+
+class ProfileRegistrationSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(read_only=True)
+    username = serializers.CharField(read_only=True)
+
+    class Meta:
+        model = User
+        fields = ['avatar', 'username', 'email', 'first_name', 'last_name', 'date_of_birth']
+
+    def update(self, instance, validated_data):
+        instance.avatar = validated_data.get('avatar', instance.avatar)
+        instance.first_name = validated_data.get('first_name', instance.first_name)
+        instance.last_name = validated_data.get('last_name', instance.last_name)
+        instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
+        instance.save()
+
+        return instance
+
+
+class CodeSendSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ['phone_number']
+
+    def update(self, instance, validated_data):
+        instance.phone_number = validated_data.get('phone_number', instance.phone_number)
+        instance.save()
+        return instance
+
+
+class CodeCheckSerializer(serializers.Serializer):
+    verification_code = serializers.CharField(max_length=6)
+
+    class Meta:
+        model = User
+        fields = ['verification_code']
+        read_only_fields = ['phone_number']
