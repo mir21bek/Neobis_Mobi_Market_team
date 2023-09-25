@@ -27,7 +27,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     avatar = models.ImageField(upload_to='MobiMarket/media/avatar_images', default='avatar_images/avatar.jpg')
     first_name = models.CharField(max_length=255, null=True)
     last_name = models.CharField(max_length=255, null=True)
-    date_of_birth = models.DateField(default=now())
+    date_of_birth = models.DateField(blank=True, null=True)
     phone_number = models.CharField(max_length=15, null=True)
     verification_code = models.CharField(max_length=6, null=True)
     is_verified = models.BooleanField(default=False)
