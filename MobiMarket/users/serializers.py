@@ -62,7 +62,6 @@ class ProfileRegistrationSerializer(serializers.ModelSerializer):
         fields = ['avatar', 'username', 'email', 'first_name', 'last_name', 'date_of_birth']
 
     def update(self, instance, validated_data):
-        instance.avatar = validated_data.get('avatar', instance.avatar)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
