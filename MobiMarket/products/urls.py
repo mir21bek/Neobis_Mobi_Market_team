@@ -1,10 +1,10 @@
 from django.urls import path
-from rest_framework import routers
 
-from .views import ProductApiView, LikeApiView
+from .views import ProductApiView, like_product, unlike_product, get_like_counts
 
-router = routers.DefaultRouter()
-router.register(r'', ProductApiView)
-urlpatterns = ([
-    path('like/<int:pk>/', LikeApiView.as_view())
-] + router.urls)
+urlpatterns = [
+    path('', ProductApiView.as_view({'get': 'list'})),
+    path('like/', like_product, name='like-product'),
+    path('unlike/<int:product_id>/', unlike_product, name='unlike-product'),
+    path('like-counts/', get_like_counts, name='like-counts'),
+]
