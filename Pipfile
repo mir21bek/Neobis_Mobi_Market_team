@@ -12,6 +12,7 @@ djangorestframework-simplejwt = "*"
 pillow = "*"
 cloudinary = "*"
 django-cloudinary-storage = "*"
+twilio = "*"
 
 [dev-packages]
 

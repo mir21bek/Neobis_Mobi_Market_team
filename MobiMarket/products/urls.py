@@ -1,7 +1,10 @@
+from django.urls import path
 from rest_framework import routers
 
-from .views import ProductApiView
+from .views import ProductApiView, LikeApiView
 
 router = routers.DefaultRouter()
 router.register(r'', ProductApiView)
-urlpatterns = router.urls
+urlpatterns = ([
+    path('like/<int:pk>/', LikeApiView.as_view())
+] + router.urls)
