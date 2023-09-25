@@ -2,11 +2,17 @@ from rest_framework import generics, exceptions
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.views import APIView
+
 from .models import User
 import random
 from django.conf import settings
 from twilio.rest import Client
-from .serializers import RegistrationSerializer, LoginSerializer, ProfileRegistrationSerializer, CodeSendSerializer, CodeCheckSerializer
+from .serializers import (RegistrationSerializer,
+                          LoginSerializer,
+                          ProfileRegistrationSerializer,
+                          CodeSendSerializer,
+                          CodeCheckSerializer)
 
 
 class RegistrationView(generics.GenericAPIView):
