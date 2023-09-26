@@ -6,7 +6,7 @@ from .models import User
 import random
 from django.conf import settings
 from twilio.rest import Client
-from .serializers import RegistrationSerializer, LoginSerializer, ProfileRegistrationSerializer, CodeSendSerializer, CodeCheckSerializer
+from .serializers import RegistrationSerializer, LoginSerializer, ProfileRegistrationSerializer, CodeSendSerializer, CodeCheckSerializer, LogoutSerializer
 
 
 class RegistrationView(generics.GenericAPIView):
@@ -95,3 +95,15 @@ class CodeCheckView(generics.GenericAPIView):
         return Response({
             'message': 'You successfully verified your phone number'
         })
+
+
+class LogoutView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LogoutSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
