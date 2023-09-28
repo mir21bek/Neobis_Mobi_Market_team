@@ -5,13 +5,14 @@ ENV PYTHONBUFFERED 1
 
 WORKDIR /app
 
-COPY requirements.txt
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
+
 COPY . .
-COPY ../.env ./.env
 
 EXPOSE 8000
 
+RUN chmod +x entrypoint.sh
 
-ENTRYPOINT [ "bash", "-c", "./entrypoint.sh"]
+CMD ["./entrypoint.sh"]
