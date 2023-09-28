@@ -99,3 +99,12 @@ class CodeCheckView(generics.GenericAPIView):
         return Response({
             'message': 'You successfully verified your phone number'
         })
+
+
+class LogoutView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        serializers = self.serializer_class(data=request.data)
+        serializers.is_valid(raise_exception=True)
+        return Response(serializers.data, status=status.HTTP_204_NO_CONTENT)
