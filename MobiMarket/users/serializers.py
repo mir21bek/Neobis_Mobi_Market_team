@@ -63,6 +63,7 @@ class ProfileRegistrationSerializer(serializers.ModelSerializer):
         fields = ['avatar', 'username', 'email', 'first_name', 'last_name', 'date_of_birth']
 
     def update(self, instance, validated_data):
+        instance.avatar = validated_data.get('avatar', instance.avatar)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
@@ -91,8 +92,15 @@ class CodeCheckSerializer(serializers.Serializer):
         read_only_fields = ['phone_number']
 
 
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('avatar', 'username', 'email', 'first_name', 'last_name', 'date_of_birth', 'phone_number')
+
+
 class LogoutSerializer(serializers.Serializer):
-    refresh  = serializers.CharField()
+    refresh = serializers.CharField()
 
     default_error_messages = {
         'bad_token': 'Token is expired or invalid'
@@ -102,7 +110,7 @@ class LogoutSerializer(serializers.Serializer):
         self.token = attrs['refresh']
         return attrs
 
-    def save(self,**kwargs):
+    def save(self, **kwargs):
         try:
             RefreshToken(self.token).blacklist()
 
