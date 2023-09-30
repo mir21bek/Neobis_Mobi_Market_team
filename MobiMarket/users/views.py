@@ -10,7 +10,9 @@ from .serializers import (RegistrationSerializer,
                           LoginSerializer,
                           ProfileRegistrationSerializer,
                           CodeSendSerializer,
-                          CodeCheckSerializer)
+                          CodeCheckSerializer,
+                          LogoutSerializer,
+                          ProfileSerializer)
 
 
 class RegistrationView(generics.GenericAPIView):
@@ -38,6 +40,7 @@ class LoginView(generics.GenericAPIView):
 class ProfileUpdateView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ProfileRegistrationSerializer
+    queryset = User.objects.all()
 
     def put(self, request):
         user = request.user
@@ -101,10 +104,22 @@ class CodeCheckView(generics.GenericAPIView):
         })
 
 
+class ProfileView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return self.request.user
+
+
 class LogoutView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
+    serializer_class = LogoutSerializer
 
     def post(self, request):
-        serializers = self.serializer_class(data=request.data)
-        serializers.is_valid(raise_exception=True)
-        return Response(serializers.data, status=status.HTTP_204_NO_CONTENT)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT)
