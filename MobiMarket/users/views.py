@@ -1,7 +1,7 @@
 from rest_framework import generics, exceptions
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from .models import User
 import random
 from django.conf import settings
@@ -105,7 +105,7 @@ class CodeCheckView(generics.GenericAPIView):
 
 
 class ProfileView(generics.RetrieveAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     serializer_class = ProfileSerializer
     queryset = User.objects.all()
 
@@ -114,7 +114,7 @@ class ProfileView(generics.RetrieveAPIView):
 
 
 class LogoutView(generics.GenericAPIView):
-    permission_classes = [IsAuthenticated]
+    permission_classes = []
     serializer_class = LogoutSerializer
 
     def post(self, request):
