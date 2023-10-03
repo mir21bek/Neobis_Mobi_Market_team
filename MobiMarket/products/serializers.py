@@ -8,20 +8,6 @@ class ProductSerializer(serializers.ModelSerializer):
         model = Product
         fields = ('name', 'description', 'available', 'photo', 'short_description', 'price')
 
-
-class MyProductSerializers(serializers.ModelSerializer):
-    user = serializers.HiddenField(default=serializers.CurrentUserDefault())
-    name = serializers.CharField(max_length=255)
-    description = serializers.CharField(max_length=500)
-    short_description = serializers.CharField(max_length=255)
-    price = serializers.DecimalField(max_digits=7, decimal_places=2)
-    photo = serializers.ImageField()
-    available = serializers.BooleanField(default=True)
-
-    class Meta:
-        model = MyProduct
-        fields = ('user', 'name', 'description', 'available', 'photo', 'short_description', 'price')
-
     def create(self, validated_data):
         product = Product.objects.create(
             name=validated_data['name'],
