@@ -12,7 +12,7 @@ from .permissions import IsOwnerOrReadOnly
 
 
 class ProductApiView(generics.ListAPIView):
-    queryset = Product.objects.filter(available=True)
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
 
