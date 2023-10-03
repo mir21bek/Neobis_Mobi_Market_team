@@ -20,7 +20,7 @@ class ProductApiView(generics.ListAPIView):
 class MyProductApiView(viewsets.ModelViewSet):
     queryset = MyProduct.objects.all()
     serializer_class = MyProductSerializers
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = [IsOwnerOrReadOnly]
 
 
 @api_view(['POST'])
