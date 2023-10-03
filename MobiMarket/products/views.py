@@ -12,7 +12,7 @@ from .utils import get_like, delete_like, get_like_count
 class ProductApiView(viewsets.ModelViewSet):
     queryset = Product.objects.all().filter(available=True)
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
 
 
 @api_view(['POST'])

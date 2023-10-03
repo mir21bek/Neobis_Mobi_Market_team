@@ -1,12 +1,14 @@
 from django.conf import settings
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from rest_framework import generics, exceptions, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from twilio.rest import Client
 
-from MobiMarket.users.serializers import LogoutSerializer, ProfileSerializer, CodeCheckSerializer, CodeSendSerializer, \
-    ProfileRegistrationSerializer, LoginSerializer, RegistrationSerializer
+from .serializers import (LogoutSerializer, ProfileSerializer, CodeCheckSerializer, CodeSendSerializer,
+                          ProfileRegistrationSerializer, LoginSerializer, RegistrationSerializer)
+
+User = get_user_model()
 
 
 class RegistrationView(generics.GenericAPIView):
@@ -67,7 +69,8 @@ class CodeSendView(generics.GenericAPIView):
             )
             return Response({'message': 'Verification code sent successfully.'}, status=status.HTTP_201_CREATED)
         except Exception as e:
-            return Response({'message': 'Failed to send verification code.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            return Response({'message': 'Failed to send verification code.'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CodeCheckView(generics.GenericAPIView):
