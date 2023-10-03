@@ -23,7 +23,7 @@ class MyProductSerializers(serializers.ModelSerializer):
         fields = ('user', 'name', 'description', 'available', 'photo', 'short_description', 'price')
 
     def create(self, validated_data):
-        product = MyProduct.objects.create(
+        product = Product.objects.create(
             name=validated_data['name'],
             description=validated_data['description'],
             available=validated_data['available'],
