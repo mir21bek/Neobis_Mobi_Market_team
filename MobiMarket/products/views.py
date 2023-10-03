@@ -12,15 +12,23 @@ from .permissions import IsOwnerOrReadOnly
 
 
 class ProductApiView(generics.ListAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.filter(available=True)
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
 
 
 class MyProductApiView(viewsets.ModelViewSet):
-    queryset = MyProduct.objects.all()
     serializer_class = MyProductSerializers
     permission_classes = [IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            return MyProduct.objects.filter(user=user)
+        return MyProduct.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 @api_view(['POST'])
