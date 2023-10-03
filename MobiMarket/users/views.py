@@ -1,14 +1,19 @@
-from django.conf import settings
-from django.contrib.auth import get_user_model
-from rest_framework import generics, exceptions, status
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import status, generics
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework import generics, exceptions
 from rest_framework.response import Response
+from rest_framework import exceptions
+from .models import User
+import random
+from django.conf import settings
 from twilio.rest import Client
-
-from .serializers import (LogoutSerializer, ProfileSerializer, CodeCheckSerializer, CodeSendSerializer,
-                          ProfileRegistrationSerializer, LoginSerializer, RegistrationSerializer)
-
-User = get_user_model()
+from .serializers import (RegistrationSerializer,
+                          LoginSerializer,
+                          ProfileRegistrationSerializer,
+                          CodeSendSerializer,
+                          CodeCheckSerializer,
+                          LogoutSerializer,
+                          ProfileSerializer)
 
 
 class RegistrationView(generics.GenericAPIView):
@@ -17,6 +22,9 @@ class RegistrationView(generics.GenericAPIView):
     def post(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user_data = serializer.data
+
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 
@@ -99,7 +107,7 @@ class CodeCheckView(generics.GenericAPIView):
 
 
 class ProfileView(generics.RetrieveAPIView):
-    permission_classes = [AllowAny]
+    permission_classes = [IsAuthenticated]
     serializer_class = ProfileSerializer
     queryset = User.objects.all()
 
@@ -108,7 +116,7 @@ class ProfileView(generics.RetrieveAPIView):
 
 
 class LogoutView(generics.GenericAPIView):
-    permission_classes = []
+    permission_classes = [IsAuthenticated]
     serializer_class = LogoutSerializer
 
     def post(self, request):
