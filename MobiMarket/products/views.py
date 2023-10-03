@@ -18,9 +18,17 @@ class ProductApiView(generics.ListAPIView):
 
 
 class MyProductApiView(viewsets.ModelViewSet):
-    queryset = MyProduct.objects.all()
     serializer_class = MyProductSerializers
-    permission_classes = (IsOwnerOrReadOnly,)
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            user = self.request.user
+            return MyProduct.objects.filter(user=user)
+        return MyProduct.objects.none()
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
 
 
 @api_view(['POST'])
