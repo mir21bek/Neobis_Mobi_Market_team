@@ -3,16 +3,24 @@ from rest_framework import permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework import generics
 
-from .models import Product, LikeProduct
-from .serializers import ProductSerializer, LikeProductSerializer
+from .models import Product, MyProduct
+from .serializers import ProductSerializer, MyProductSerializers
 from .utils import get_like, delete_like, get_like_count
+from .permissions import IsOwnerOrReadOnly
 
 
-class ProductApiView(viewsets.ModelViewSet):
-    queryset = Product.objects.all().filter(available=True)
+class ProductApiView(generics.ListAPIView):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     permission_classes = [permissions.AllowAny]
+
+
+class MyProductApiView(viewsets.ModelViewSet):
+    queryset = MyProduct.objects.all()
+    serializer_class = MyProductSerializers
+    permission_classes = (IsOwnerOrReadOnly,)
 
 
 @api_view(['POST'])
