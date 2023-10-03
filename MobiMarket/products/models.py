@@ -14,6 +14,7 @@ class Product(models.Model):
         upload_to='MobiMarket/media/product_image',
         default='product_image/images.jpeg')
     price = models.DecimalField(verbose_name='Цена', max_digits=7, decimal_places=2)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Продукты'
