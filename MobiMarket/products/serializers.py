@@ -6,14 +6,14 @@ from .models import Product, LikeProduct, MyProduct
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('name', 'description', 'photo', 'short_description', 'price')
+        fields = ('name', 'description', 'available', 'photo', 'short_description', 'price')
 
 
 class MyProductSerializers(serializers.ModelSerializer):
     user = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
-        models = MyProduct
+        model = MyProduct
         fields = ('user', 'product')
 
     def update(self, instance, validated_data):
