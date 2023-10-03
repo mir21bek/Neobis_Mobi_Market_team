@@ -22,6 +22,18 @@ class MyProductSerializers(serializers.ModelSerializer):
         model = MyProduct
         fields = ('user', 'name', 'description', 'available', 'photo', 'short_description', 'price')
 
+    def create(self, validated_data):
+        product = MyProduct.objects.create(
+            name=validated_data['name'],
+            description=validated_data['description'],
+            available=validated_data['available'],
+            photo=validated_data['photo'],
+            short_description=validated_data['short_description'],
+            price=validated_data['price'],
+        )
+        product.save()
+        return product
+
     def update(self, instance, validated_data):
         instance.name = validated_data.get('name', instance.name)
         instance.description = validated_data.get('descriptions', instance.description)
