@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Product, MyProduct
+from .models import Product
 from .serializers import ProductSerializer
 from .utils import get_like, delete_like, get_like_count
 

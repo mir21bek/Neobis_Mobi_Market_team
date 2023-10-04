@@ -5,7 +5,7 @@ User = get_user_model()
 
 
 class Product(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(verbose_name='Название товара', max_length=255)
     description = models.TextField(verbose_name='Описание', max_length=500)
     short_description = models.CharField(verbose_name='Короткое описание', max_length=255)
