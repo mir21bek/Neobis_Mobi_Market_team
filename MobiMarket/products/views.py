@@ -5,10 +5,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Product, MyProduct
+from .models import Product
 from .serializers import ProductSerializer
 from .utils import get_like, delete_like, get_like_count
-from .permissions import IsOwnerOrReadOnly
 
 
 class ProductApiView(generics.ListAPIView):
@@ -18,9 +17,15 @@ class ProductApiView(generics.ListAPIView):
 
 
 class ProductOwnerApiView(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [IsOwnerOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        return Product.objects.filter(user=self.request.user)
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
+
 
 
 @api_view(['POST'])

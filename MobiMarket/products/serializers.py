@@ -1,14 +1,20 @@
 from rest_framework import serializers
 
-from .models import Product, LikeProduct, MyProduct
+from .models import Product, LikeProduct
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
 class ProductSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Product
         fields = ('name', 'description', 'available', 'photo', 'short_description', 'price')
 
     def create(self, validated_data):
+        user = self.context['request'].user
+
         product = Product.objects.create(
             name=validated_data['name'],
             description=validated_data['description'],
@@ -16,6 +22,7 @@ class ProductSerializer(serializers.ModelSerializer):
             photo=validated_data['photo'],
             short_description=validated_data['short_description'],
             price=validated_data['price'],
+            user=user
         )
         product.save()
         return product

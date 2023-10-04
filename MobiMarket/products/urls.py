@@ -4,7 +4,7 @@ from rest_framework import routers
 from .views import ProductApiView, ProductOwnerApiView, like_product, unlike_product, get_like_counts
 
 router = routers.SimpleRouter()
-router.register(r'product/api', ProductOwnerApiView)
+router.register(r'product/api', ProductOwnerApiView, basename='product-api')
 urlpatterns = [
     path('product-list/', ProductApiView.as_view()),
     path('like/<int:product_id>/', like_product, name='like-product'),
