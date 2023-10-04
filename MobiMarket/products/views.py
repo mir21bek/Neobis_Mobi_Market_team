@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import generics
 
-from .models import Product
+from .models import Product, MyProduct
 from .serializers import ProductSerializer
 from .utils import get_like, delete_like, get_like_count
 
@@ -21,11 +21,10 @@ class ProductOwnerApiView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
-        return Product.objects.filter(user=self.request.user)
+        return Product.objects.filter(created_by=self.request.user)
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
-
+        serializer.save(created_by=self.request.user)
 
 
 @api_view(['POST'])
