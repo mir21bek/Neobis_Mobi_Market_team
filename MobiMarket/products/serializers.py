@@ -6,7 +6,7 @@ from .models import Product, LikeProduct
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        fields = ('name', 'description', 'available', 'photo', 'short_description', 'price')
+        fields = ('id', 'name', 'description', 'available', 'photo', 'short_description', 'price')
 
     def create(self, validated_data):
         user = self.context['request'].user

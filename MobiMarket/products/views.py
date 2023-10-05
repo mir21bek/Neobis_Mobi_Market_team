@@ -13,15 +13,21 @@ from .utils import get_like, delete_like, get_like_count
 class ProductApiView(generics.ListAPIView):
     queryset = Product.objects.filter(available=True)
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
+
+
+class ProductDetailApiView(generics.RetrieveAPIView):
+    queryset = Product.objects.filter(available=True)
+    serializer_class = ProductSerializer
+    permission_classes = [permissions.AllowAny]
 
 
 class ProductOwnerApiView(viewsets.ModelViewSet):
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        return Product.objects.filter(created_by=self.request.user)
+        return Product.objects.all().filter(created_by=self.request.user)
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
