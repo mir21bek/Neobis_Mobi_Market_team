@@ -35,12 +35,8 @@ class ProductOwnerApiView(viewsets.ModelViewSet):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def like_product(request):
+def like_product(request, product_id):
     user = request.user
-    product_id = request.data.get('product_id')
-
-    if product_id is None:
-        return Response({"error": "product_id is required"}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
         product = Product.objects.get(id=product_id)
@@ -71,6 +67,6 @@ def unlike_product(request, product_id):
 
 @api_view(['GET'])
 @permission_classes([])
-def get_like_counts(request):
-    like_counts = get_like_count()
+def get_like_counts(request, product_id):
+    like_counts = get_like_count(product_id)
     return Response(like_counts, status=status.HTTP_200_OK)
