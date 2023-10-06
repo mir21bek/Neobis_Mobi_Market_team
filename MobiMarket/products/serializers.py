@@ -2,7 +2,6 @@ from rest_framework import serializers
 
 from .models import Product, LikeProduct
 
-
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
@@ -30,7 +29,6 @@ class ProductSerializer(serializers.ModelSerializer):
         instance.price = validated_data.get('price', instance.price)
         instance.save()
         return instance
-
 
 class LikeProductSerializer(serializers.ModelSerializer):
     class Meta:
