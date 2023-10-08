@@ -3,6 +3,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics, exceptions
 from rest_framework.response import Response
 from rest_framework import exceptions
+from django.db import transaction
 from .models import User
 import random
 from django.conf import settings
@@ -77,6 +78,9 @@ class CodeSendView(generics.GenericAPIView):
             )
             return Response({'message': 'Verification code sent successfully.'}, status=status.HTTP_201_CREATED)
         except Exception as e:
+            with transaction.atomic():
+                request.user.phone_number = None
+                request.user.save()
             return Response({'message': 'Failed to send verification code.'},
                             status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
