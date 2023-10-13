@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import User
 from django.contrib import auth
 from rest_framework.exceptions import AuthenticationFailed
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 
 
 class RegistrationSerializer(serializers.ModelSerializer):
@@ -62,6 +63,7 @@ class ProfileRegistrationSerializer(serializers.ModelSerializer):
         fields = ['avatar', 'username', 'email', 'first_name', 'last_name', 'date_of_birth']
 
     def update(self, instance, validated_data):
+        instance.avatar = validated_data.get('avatar', instance.avatar)
         instance.first_name = validated_data.get('first_name', instance.first_name)
         instance.last_name = validated_data.get('last_name', instance.last_name)
         instance.date_of_birth = validated_data.get('date_of_birth', instance.date_of_birth)
@@ -88,3 +90,29 @@ class CodeCheckSerializer(serializers.Serializer):
         model = User
         fields = ['verification_code']
         read_only_fields = ['phone_number']
+
+
+class ProfileSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('avatar', 'username', 'email', 'first_name', 'last_name', 'date_of_birth', 'phone_number')
+
+
+class LogoutSerializer(serializers.Serializer):
+    refresh = serializers.CharField()
+
+    default_error_messages = {
+        'bad_token': 'Token is expired or invalid'
+    }
+
+    def validate(self, attrs):
+        self.token = attrs['refresh']
+        return attrs
+
+    def save(self, **kwargs):
+        try:
+            RefreshToken(self.token).blacklist()
+
+        except TokenError:
+            self.fail('bad_token')

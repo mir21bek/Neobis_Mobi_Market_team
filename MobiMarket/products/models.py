@@ -5,14 +5,17 @@ User = get_user_model()
 
 
 class Product(models.Model):
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     name = models.CharField(verbose_name='Название товара', max_length=255)
     description = models.TextField(verbose_name='Описание', max_length=500)
+    short_description = models.CharField(verbose_name='Короткое описание', max_length=255)
+    available = models.BooleanField(verbose_name="В наличии?", default=True)
     photo = models.ImageField(
         verbose_name='Фото товара',
         upload_to='MobiMarket/media/product_image',
         default='product_image/images.jpeg')
-    available = models.BooleanField(verbose_name='В наличии', default=False)
     price = models.DecimalField(verbose_name='Цена', max_digits=7, decimal_places=2)
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = 'Продукты'

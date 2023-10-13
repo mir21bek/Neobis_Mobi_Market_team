@@ -1,9 +1,9 @@
+from rest_framework import status, generics
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework import generics, exceptions
 from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.views import APIView
-
+from rest_framework import exceptions
+from django.db import transaction
 from .models import User
 import random
 from django.conf import settings
@@ -12,7 +12,9 @@ from .serializers import (RegistrationSerializer,
                           LoginSerializer,
                           ProfileRegistrationSerializer,
                           CodeSendSerializer,
-                          CodeCheckSerializer)
+                          CodeCheckSerializer,
+                          LogoutSerializer,
+                          ProfileSerializer)
 
 
 class RegistrationView(generics.GenericAPIView):
@@ -40,6 +42,7 @@ class LoginView(generics.GenericAPIView):
 class ProfileUpdateView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = ProfileRegistrationSerializer
+    queryset = User.objects.all()
 
     def put(self, request):
         user = request.user
@@ -75,7 +78,11 @@ class CodeSendView(generics.GenericAPIView):
             )
             return Response({'message': 'Verification code sent successfully.'}, status=status.HTTP_201_CREATED)
         except Exception as e:
-            return Response({'message': 'Failed to send verification code.'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            with transaction.atomic():
+                request.user.phone_number = None
+                request.user.save()
+            return Response({'message': 'Failed to send verification code.'},
+                            status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 class CodeCheckView(generics.GenericAPIView):
@@ -101,3 +108,21 @@ class CodeCheckView(generics.GenericAPIView):
         return Response({
             'message': 'You successfully verified your phone number'
         })
+
+
+class ProfileView(generics.RetrieveAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = ProfileSerializer
+    queryset = User.objects.all()
+
+    def get_object(self):
+        return self.request.user
+
+
+class LogoutView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = LogoutSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
